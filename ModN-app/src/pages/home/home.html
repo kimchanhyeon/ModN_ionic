@@ -1,17 +1,32 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Home</ion-title>
-  </ion-navbar>
+
+	<ion-navbar>
+		<ion-title>Browser</ion-title>
+		<ion-buttons right>
+			<button ion-button (click)="GMarketOptionGetter.show()">
+	  			show
+ 		 	</button>
+		</ion-buttons>
+	</ion-navbar>
+
 </ion-header>
 
+
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+	<ion-segment [(ngModel)]="segment" color="secondary">
+		<ion-segment-button value="browser">
+			browser
+		</ion-segment-button>
+		<ion-segment-button value="options" [disabled]="!loaded">
+			options
+		</ion-segment-button>
+	</ion-segment>
+
+	<div *ngIf="segment=='browser'" style="width: 100%; height: 100%">
+		<iframe #browser style="display: block; width: 100%; height: 100%" src="http://mitem.gmarket.co.kr/Item?goodscode=920511923&keyword_seq=11747635098&keyword=%25eb%25a6%25ac%25ec%2596%25bc%25ed%258f%25ac%25ec%258a%25a4"></iframe>
+	</div>
+
+	<div *ngIf="segment=='options'">
+		{{optionstr}}
+	</div>
 </ion-content>

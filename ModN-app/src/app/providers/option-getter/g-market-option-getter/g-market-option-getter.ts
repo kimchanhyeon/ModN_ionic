@@ -90,6 +90,7 @@ export class GMarketOptionGetter {
 		for (let i = 0; i < optionGroupsCheerio.length; i++) {
 			let _tag = optionGroupsCheerio[i];
 			let _children: any = _tag.children[0];
+
 			result.push(new GMarketOptionGroup(_children.data));
 		}
 

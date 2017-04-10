@@ -45,6 +45,7 @@ import { CatalogProvider } from './providers/catalog.provider';
 import { OrderProvider } from './providers/order.provider';
 import { UserProvider } from './providers/user.provider';
 import { GMarketOptionGetter } from './providers/option-getter/g-market-option-getter/g-market-option-getter';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 let pages = [
   //
   MyApp,
@@ -82,6 +83,7 @@ export function providers() {
     CatalogProvider,
     UserProvider,
 	GMarketOptionGetter,
+	InAppBrowser,
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ];

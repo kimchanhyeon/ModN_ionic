@@ -3,7 +3,8 @@ import { Option } from './../models/option-model';
 export enum GMOptionChararacter {
 	Normal,
 	Combination, // 조합 구매 상품
-	Plus // 추가 구매 상품
+	Plus, // 추가 구매 상품
+	Ship // 택배
 }
 
 export class GMarketOption extends Option {
@@ -19,27 +20,38 @@ export class GMarketOption extends Option {
 		 */
 
 		if (id) {
-			let indexStr = this.id.substring(7);
-			console.log(indexStr[0]);
-			console.log(GMarketOption.isNumber(indexStr[0]));
-			if (GMarketOption.isNumber(indexStr[0])) {
-				this.character = GMOptionChararacter.Normal;
-			}
-			else if (indexStr[0] == 'p') {
-				this.character = GMOptionChararacter.Plus;
-				indexStr = indexStr.substring(1);
+			let indexStr: string;
 
+			if (this.id.startsWith('clr_ship')) {
+				this.character = GMOptionChararacter.Ship;
+				indexStr = this.id.substring(9);
 			}
-			else if (indexStr[0] == 'c') {
-				this.character = GMOptionChararacter.Combination;
-				indexStr = indexStr.substring(1);
+			else if (this.id.startsWith('clr_lyr')) {
+				indexStr = this.id.substring(8);
+				if (GMarketOption.isNumber(indexStr[0])) {
+					this.character = GMOptionChararacter.Normal;
+				}
+				else if (indexStr[0] == 'p') {
+					this.character = GMOptionChararacter.Plus;
+					indexStr = indexStr.substring(1);
+
+				}
+				else if (indexStr[0] == 'c') {
+					this.character = GMOptionChararacter.Combination;
+					indexStr = indexStr.substring(1);
+				}
+				else {
+					console.log("Exception case happened: GMarketOption that have not been handled");
+					console.log(indexStr);
+					return;
+				}
 			}
 			else {
-				console.log("Exception case happened: GMarketOption that have not been handled");
-				console.log(indexStr);
+				console.log("Exception: GMarketOptionGroup that have not been handled");
+				console.log("id: ");
+				console.log(this.id);
 				return;
 			}
-
 			let index_str = indexStr.split('_');
 			this.index = index_str.map((str) => Number(str));
 		}
