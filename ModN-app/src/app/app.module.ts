@@ -75,7 +75,7 @@ export function providers() {
     SplashScreen,
     //TestData,
     //AppProvider,
-    HttpProvider,
+    //HttpProvider,
     AuthProvider,
     CatalogProvider,
     CatalogProvider,

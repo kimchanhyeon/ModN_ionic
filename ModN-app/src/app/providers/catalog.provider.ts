@@ -41,6 +41,7 @@ export class CatalogProvider {
   /*
    * Method for Products
    */
+/*
   create(product:Product):Observable<Product>{
     let body = JSON.stringify(product);
     let headers = new Headers({'Content-Type':'application/json'});
@@ -66,7 +67,7 @@ export class CatalogProvider {
     let headers = new Headers({'Content-Type':'application/json'});
     let options = new RequestOptions({headers:headers, body:params});
     return this.httpService.retrieve(this.url.catalog+'/'+id, options);
-  }
+  }*/
   /*
   remove(id:number):Observable<Product>{
     let body = JSON.stringify({"id":id});
@@ -82,9 +83,11 @@ export class CatalogProvider {
     this.products = products;
   }
 
+
   /*
    * Method for Skus
    */
+  /*
   createSku(id:number, sku:Sku):Observable<Sku>{
     let body = JSON.stringify(sku);
     let headers = new Headers({'Content-Type':'application/json'});
@@ -111,4 +114,5 @@ export class CatalogProvider {
   setSkus(skus:Array<Sku>){
       this.skus = skus;
   }
+  */
 }
