@@ -18,8 +18,8 @@ import { Option } from '../models/catalog.model';
 /*
  * Providers 
  */
-import {URL} from './common/url.data';
-import {HttpProvider} from './common/http.provider';
+import { URL } from './common/url.data';
+import { HttpProvider } from './common/http.provider';
 
 
 /*
