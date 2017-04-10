@@ -27,6 +27,10 @@
 	</div>
 
 	<div *ngIf="segment=='options'">
-		{{optionstr}}
+		<ion-list>
+			<button ion-item *ngFor="let group of optionGroups" (click)="onClick(group)">
+				{{ group.groupName }}
+			</button>
+		</ion-list>
 	</div>
 </ion-content>

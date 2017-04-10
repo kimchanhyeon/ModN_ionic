@@ -1,3 +1,5 @@
+import { OptionDetailPage } from './../pages/option-detail/option-detail';
+import { OptionGroupDetailPage } from './../pages/option-group-detail/option-group-detail';
 /*
  * Modules 
  */
@@ -58,7 +60,9 @@ let pages = [
   CartPage,
   FavoritesPage,
   UserPage,
-  ProductPage
+  OptionGroupDetailPage,
+  ProductPage,
+  OptionDetailPage
   //Components
 ]
 

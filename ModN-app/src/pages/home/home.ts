@@ -1,3 +1,4 @@
+import { OptionGroupDetailPage } from './../option-group-detail/option-group-detail';
 /*
  * Modules 
  */
@@ -13,7 +14,7 @@ const URL = "http://mitem.gmarket.co.kr/Item?goodscode=896819241&keyword_seq=117
 	templateUrl: 'home.html'
 })
 export class HomePage {
-	options: GMarketOptionGroup[];
+	optionGroups: GMarketOptionGroup[];
 	segment: string = 'browser';
 	optionstr: string;
 	loaded: boolean = false;
@@ -24,10 +25,13 @@ export class HomePage {
 
 	ngOnInit() {
 		this.GMarketOptionGetter.ready(URL).then(() => {
-			this.options = this.GMarketOptionGetter.getOptions();
-			this.optionstr = JSON.stringify(this.options);
+			this.optionGroups = this.GMarketOptionGetter.getOptions();
 			this.loaded = true;
 		});
+	}
+
+	onClick(item: GMarketOptionGroup) {
+		this.navCtrl.push(OptionGroupDetailPage, {optionGroup: item});
 	}
 
 }

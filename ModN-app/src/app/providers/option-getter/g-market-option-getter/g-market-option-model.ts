@@ -1,6 +1,6 @@
 import { Option } from './../models/option-model';
 
-export enum GMOptionChararacter {
+export enum GMOptionCharacter {
 	Normal,
 	Combination, // 조합 구매 상품
 	Plus, // 추가 구매 상품
@@ -8,7 +8,7 @@ export enum GMOptionChararacter {
 }
 
 export class GMarketOption extends Option {
-	character: GMOptionChararacter = GMOptionChararacter.Normal;
+	character: GMOptionCharacter = GMOptionCharacter.Normal;
 	index: Array<number>;
 
 	constructor(id: string, data: string, soldOut: boolean) {
@@ -23,21 +23,20 @@ export class GMarketOption extends Option {
 			let indexStr: string;
 
 			if (this.id.startsWith('clr_ship')) {
-				this.character = GMOptionChararacter.Ship;
+				this.character = GMOptionCharacter.Ship;
 				indexStr = this.id.substring(9);
 			}
 			else if (this.id.startsWith('clr_lyr')) {
-				indexStr = this.id.substring(8);
+				indexStr = this.id.substring(7);
 				if (GMarketOption.isNumber(indexStr[0])) {
-					this.character = GMOptionChararacter.Normal;
+					this.character = GMOptionCharacter.Normal;
 				}
 				else if (indexStr[0] == 'p') {
-					this.character = GMOptionChararacter.Plus;
+					this.character = GMOptionCharacter.Plus;
 					indexStr = indexStr.substring(1);
-
 				}
 				else if (indexStr[0] == 'c') {
-					this.character = GMOptionChararacter.Combination;
+					this.character = GMOptionCharacter.Combination;
 					indexStr = indexStr.substring(1);
 				}
 				else {
@@ -54,9 +53,6 @@ export class GMarketOption extends Option {
 			}
 			let index_str = indexStr.split('_');
 			this.index = index_str.map((str) => Number(str));
-		}
-		else {
-			this.index = Array(2).fill(null);
 		}
 	}
 

@@ -1,0 +1,16 @@
+<ion-header>
+
+	<ion-navbar>
+		<ion-title>OptionGroupDetail</ion-title>
+	</ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+		<button ion-item *ngFor="let option of optionGroup.options" (click)="onClick(option)">
+			{{ option.data }}
+		</button>
+	</ion-list>
+</ion-content>
