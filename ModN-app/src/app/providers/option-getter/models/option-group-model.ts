@@ -11,4 +11,8 @@ export class OptionGroup {
 			this.options = [];
 		}
 	}
+
+	isEmpty() {
+		return this.options.length == 0;
+	}
 }

@@ -1,4 +1,5 @@
-import { GMarketOptionGroup, GMOptionGroupCharacter } from './g-market-option-group-model';
+import { GMarketOptions } from './g-market-options-model';
+import { GMarketOptionGroup } from './g-market-option-group-model';
 import { GMarketOption, GMOptionCharacter } from './g-market-option-model';
 import { Platform } from 'ionic-angular';
 import { InAppBrowser, InAppBrowserObject } from '@ionic-native/in-app-browser';
@@ -10,6 +11,7 @@ const SELECTOR_OPTIONS: string = 'ul.clr_list li label';
 const SELECTOR_OPTION_GROUPS: string = 'li.list2 span';
 const SELECTOR_PLUS_OPTION_GROUPS: string = 'ul#optionP li span';
 const SELECTOR_DELIVERY_PLACEHOLDER: string = 'ul#GoodsDelivery li span';
+const SELECTOR_EMAIL: string = 'div#optionT span.sub_tit';
 
 @Injectable()
 export class GMarketOptionGetter {
@@ -24,7 +26,6 @@ export class GMarketOptionGetter {
 		return new Promise<any>((resolve, reject) => {
 			this.platform.ready().then(() => {
 				this.browser = this.iab.create(URL, '_self', { hidden: 'yes' });
-				this.browser.hide();
 				this.domfinder = new CheerioDOMFinder();
 				this.browser.on('loadstop').subscribe((res) => {
 					this.browser.executeScript({ code: 'document.documentElement.innerHTML' }).then((bodyArray) => {
@@ -44,8 +45,9 @@ export class GMarketOptionGetter {
 		this.browser.show();
 	}
 
-	getOptions(): GMarketOptionGroup[] {
-		return this.parseOptionGroupsCheerio();
+	getOptions(): GMarketOptions {
+		let parsedOptionGroups = this.parseOptionGroupsCheerio();
+		return new GMarketOptions(parsedOptionGroups, this.domfinder, this.browser);
 	}
 
 	private get optionGroupsCheerio(): cheerio.Cheerio {
@@ -60,7 +62,7 @@ export class GMarketOptionGetter {
 		return this.domfinder.findAll(SELECTOR_PLUS_OPTION_GROUPS);
 	}
 
-	private static parseOptionsCheerio(optionCheerio: cheerio.Cheerio): GMarketOption[] {
+	static parseOptionsCheerio(optionCheerio: cheerio.Cheerio): GMarketOption[] {
 		let parsedOptions: GMarketOption[] = [];
 
 		for (let i = 0; i < optionCheerio.length; i++) {
@@ -84,7 +86,7 @@ export class GMarketOptionGetter {
 		return parsedOptions;
 	}
 
-	private get optionGroups() {
+	private get optionGroupnames() {
 		let optionGroupsCio = this.optionGroupsCheerio;
 		let plusOptionGroupsCio = this.plusOptionGroupCheerio;
 
@@ -112,8 +114,6 @@ export class GMarketOptionGetter {
 		let optionsCio = this.optionsCheerio;
 		let parsedOptions: GMarketOption[] = GMarketOptionGetter.parseOptionsCheerio(optionsCio);
 
-		console.log("options parsed: ")
-		console.log(parsedOptions);
 		/**
 		 * Grouping Options
 		 */
@@ -145,17 +145,42 @@ export class GMarketOptionGetter {
 	}
 
 	private parseOptionGroupsCheerio(): GMarketOptionGroup[] {
-		let optionGroups = this.optionGroups;
-		let normalAndCombinationGroups: string[] = optionGroups.normalAndCombinationGroups;
-		let plusGroups: string[] = optionGroups.plusGroups;
+		let optionGroups = this.optionGroupnames;
+		let normalAndCombinationGroupnames: string[] = optionGroups.normalAndCombinationGroups;
+		let plusGroupnames: string[] = optionGroups.plusGroups;
 
 		let groupedOptions = this.groupedOptions;
-		let shipOptions: GMarketOption[] = groupedOptions.ship;
-		let plusOptions: GMarketOption[] = groupedOptions.plus;
-		let combinationOptions: GMarketOption[] = groupedOptions.combination;
 		let normalOptions: GMarketOption[] = groupedOptions.normal;
+		let combinationOptions: GMarketOption[] = groupedOptions.combination;
+		let plusOptions: GMarketOption[] = groupedOptions.plus;
+		let shipOptions: GMarketOption[] = groupedOptions.ship;
 
 		let parsedOptionGroups: GMarketOptionGroup[] = [];
+		
+		/**
+		 * 1, 2. normal and combination options
+		 */
+		if (normalOptions.length != 0 || combinationOptions.length != 0) {
+			let normalAndCombinationGroups: GMarketOptionGroup[] = [];
+
+			for (let group of normalAndCombinationGroupnames) {
+				normalAndCombinationGroups.push(new GMarketOptionGroup(group, [], GMOptionCharacter.Normal));
+			}
+			for (let option of normalOptions) {
+				normalAndCombinationGroups[option.index[0]].options.push(option);
+			}
+			for (let option of combinationOptions) {
+				normalAndCombinationGroups[option.index[0]].options.push(option);
+			}
+
+			console.log(normalAndCombinationGroups);
+
+			if (normalAndCombinationGroups != []) parsedOptionGroups = parsedOptionGroups.concat(normalAndCombinationGroups);
+		}
+
+		for(let group of parsedOptionGroups) {
+			group.resetCharacter();
+		}
 
 		/**
 		 * 3. plus options
@@ -163,8 +188,8 @@ export class GMarketOptionGetter {
 		if (plusOptions.length != 0) {
 			let plusOptionGroups: GMarketOptionGroup[] = [];
 
-			for (let group of plusGroups) {
-				plusOptionGroups.push(new GMarketOptionGroup(group, [], GMOptionGroupCharacter.Plus));
+			for (let group of plusGroupnames) {
+				plusOptionGroups.push(new GMarketOptionGroup(group, [], GMOptionCharacter.Plus));
 			}
 			for (let option of plusOptions) {
 				plusOptionGroups[option.index[0]].options.push(option);
@@ -177,7 +202,7 @@ export class GMarketOptionGetter {
 		 * 4. ship options
 		 */
 		if (shipOptions.length != 0) {
-			parsedOptionGroups.push(new GMarketOptionGroup('배송비 결제', shipOptions, GMOptionGroupCharacter.Ship)) //TODO: get placeholder str
+			parsedOptionGroups.push(new GMarketOptionGroup('배송비 결제', shipOptions, GMOptionCharacter.Ship)) //TODO: get placeholder str
 		}
 
 		return parsedOptionGroups;

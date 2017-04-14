@@ -1,19 +1,20 @@
-import { GMarketOption } from './g-market-option-model';
+import { GMarketOption, GMOptionCharacter } from './g-market-option-model';
 import { OptionGroup } from './../models/option-group-model';
 
-export enum GMOptionGroupCharacter {
-	Normal,
-	Combination,
-	Plus,
-	Ship
-}
-
 export class GMarketOptionGroup extends OptionGroup {
-	character: GMOptionGroupCharacter = GMOptionGroupCharacter.Normal;
+	options: GMarketOption[];
+	character: GMOptionCharacter = GMOptionCharacter.Combination;
 
-	constructor(groupName: string, options?: GMarketOption[], character?: GMOptionGroupCharacter) {
+	constructor(groupName: string, options?: GMarketOption[], character?: GMOptionCharacter) {
 		super(groupName, options);
 
 		if(character) this.character = character;
+	}
+
+	resetCharacter() {
+		if(this.options.length != 0) {
+			let option = this.options[0];
+			this.character = option.character;
+		}
 	}
 }

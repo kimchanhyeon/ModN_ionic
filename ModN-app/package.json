@@ -39,12 +39,13 @@
     "typescript": "2.2.2"
   },
   "cordovaPlugins": [
+    "ionic-plugin-keyboard",
     "cordova-plugin-whitelist",
     "cordova-plugin-console",
-    "cordova-plugin-device",
     "cordova-plugin-statusbar",
+    "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
     "ios",
@@ -52,6 +53,11 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
+    },
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
     }
   ],
   "description": "justfly: The justfly project"

@@ -6,13 +6,17 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>OptionDetail</ion-title>
-  </ion-navbar>
+	<ion-navbar>
+		<ion-title>OptionDetail</ion-title>
+	</ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
 	{{stringify(option)}}
+
+	<button ion-button (click)="handleClick()">
+		선택하기
+	</button>
 </ion-content>
